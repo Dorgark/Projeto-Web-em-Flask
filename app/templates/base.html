@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Web Flask MVC</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('user.index') }}" class="brand">Flask MVC</a>
+            <nav class="nav-links">
+                <a href="{{ url_for('user.index') }}">Início</a>
+                {% if session.get('user_id') %}
+                    <a href="{{ url_for('user.perfil') }}">Meu Perfil</a>
+                    {% if session.get('user_tipo') == 'admin' %}
+                        <a href="{{ url_for('admin.lista_usuarios') }}" class="btn-admin">Painel Admin</a>
+                    {% endif %}
+                    <a href="{{ url_for('auth.logout') }}" class="btn-logout">Sair</a>
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}">Entrar</a>
+                    <a href="{{ url_for('auth.cadastro') }}" class="btn-primary">Cadastrar</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2024 - Guia Prático Flask MVC para Sistemas Web</p>
+    </footer>
+</body>
+</html>
